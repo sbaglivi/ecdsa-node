@@ -42,3 +42,4 @@ _Hint_ - Use [nodemon](https://www.npmjs.com/package/nodemon) instead of `node` 
 - Improve display of errors that happen during processes
 - Logic is repeated throughout some components, could have extracted it to a different file
 Didn't bother improving these parts since they seemed disconnected from cryptography which was what I was trying to learn.
+- !! A good improvement would have been using a unique id for each transfer request, sequential, to be encrypted in the signed message. This way even if someone were to take hold of the body of a transfer request, he would not be able to use it to replicate the same transfer again. I might implement this in the future, the most annoying part is doing a double request from client to server: 1. getTransactionId(address) -> currentId 2. makeTransfer(transferBody (including currentId) + signature): boolean result
