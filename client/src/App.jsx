@@ -1,21 +1,23 @@
 import Wallet from "./Wallet";
 import Transfer from "./Transfer";
+import AuthComponent from "./AuthComponent";
 import "./App.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-  const [balance, setBalance] = useState(0);
-  const [address, setAddress] = useState("");
+  const [availableAddresses, setAvailableAddresses] = useState([]);
+
+  useEffect(() => {
+    let savedLogins = Object.keys(localStorage).filter(k => k.startsWith("eth-")).map(k => k.slice(4))
+    setAvailableAddresses(savedLogins)
+    if (savedLogins.length === 1) setAddress(savedLogins[0])
+  }, [])
 
   return (
     <div className="app">
-      <Wallet
-        balance={balance}
-        setBalance={setBalance}
-        address={address}
-        setAddress={setAddress}
-      />
-      <Transfer setBalance={setBalance} address={address} />
+      <Wallet availableAddresses={availableAddresses} />
+      <Transfer availableAddresses={availableAddresses} />
+      <AuthComponent setAvailableAddresses={setAvailableAddresses}/>
     </div>
   );
 }

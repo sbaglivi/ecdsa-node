@@ -1,17 +1,23 @@
+import { useState } from "react";
 import server from "./server";
 
-function Wallet({ address, setAddress, balance, setBalance }) {
-  async function onChange(evt) {
-    const address = evt.target.value;
-    setAddress(address);
-    if (address) {
-      const {
-        data: { balance },
-      } = await server.get(`balance/${address}`);
-      setBalance(balance);
-    } else {
-      setBalance(0);
+
+function Wallet({availableAddresses}) {
+  const [balance, setBalance] = useState("");
+  const [address, setAddress] = useState("");
+
+  async function getBalance() {
+    try {
+      const {data: {balance}} = await server.get(`balance/${address}`)
+      // console.log(response)
+      setBalance(balance)
+    } catch (ex) {
+      console.log(`while retrieving balance: ${ex}`)
     }
+  }
+
+  const onSelect = (f, e) => {
+    f(e.target.value)
   }
 
   return (
@@ -20,8 +26,12 @@ function Wallet({ address, setAddress, balance, setBalance }) {
 
       <label>
         Wallet Address
-        <input placeholder="Type an address, for example: 0x1" value={address} onChange={onChange}></input>
+        <select className='select' onChange={onSelect.bind(null, setAddress)}>
+          {availableAddresses.map(a => <option key={a} value={a}>{a}</option>)}
+        </select>
       </label>
+
+      <button type="submit" className="button" onClick={getBalance}>Check balance</button>
 
       <div className="balance">Balance: {balance}</div>
     </div>
