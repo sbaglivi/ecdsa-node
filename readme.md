@@ -31,6 +31,7 @@ The application should connect to the default server port (3042) automatically!
 _Hint_ - Use [nodemon](https://www.npmjs.com/package/nodemon) instead of `node` to automatically restart the server on any changes.
 
 ### Changes
+- Private key is never sent to backend any more. Now transfer messages are signed with the private key of the sender and, together with the recovery bit, this signature is what's used to derive the public key and from that the address from which to withdraw the funds.
 - Backend now uses sqlite to have data persistence
 - Added functionality to register new users, they just need to input a password and a private key gets generated for them. I also give them their wallet address which is the last 20 bytes of the keccak hash of their public key.
 - When a new user is registered, its private key is saved in local storage after being encrypted. The encryption is done through AES CBC, the key is derived from the user password using scrypt. Both the salt used for creating the key and the IV for the encryption processes are stored alongside the priv. key in local storage.
