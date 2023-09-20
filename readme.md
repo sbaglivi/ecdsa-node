@@ -29,3 +29,15 @@ The server folder contains a node.js server using [express](https://expressjs.co
 The application should connect to the default server port (3042) automatically! 
 
 _Hint_ - Use [nodemon](https://www.npmjs.com/package/nodemon) instead of `node` to automatically restart the server on any changes.
+
+### Changes
+- Backend now uses sqlite to have data persistence
+- Added functionality to register new users, they just need to input a password and a private key gets generated for them. I also give them their wallet address which is the last 20 bytes of the keccak hash of their public key.
+- When a new user is registered, its private key is saved in local storage after being encrypted. The encryption is done through AES CBC, the key is derived from the user password using scrypt. Both the salt used for creating the key and the IV for the encryption processes are stored alongside the priv. key in local storage.
+- Wallet and Transfer now have a select to choose between saved addresses
+- If you accidentally delete the data in your local storage but still have access to your private keys, you can re-add them through the login function. Your password does not need to match the previous one, your priv. key will get encrypted through this new password.
+
+### Possible improvements
+- Improve display of errors that happen during processes
+- Logic is repeated throughout some components, could have extracted it to a different file
+Didn't bother improving these parts since they seemed disconnected from cryptography which was what I was trying to learn.
